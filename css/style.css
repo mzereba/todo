@@ -1,0 +1,109 @@
+/**
+ * Jan 18, 2015
+ * style.css 
+ * @author mzereba
+ */
+
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', Arial;
+  color: #72CE9B;
+  font-weight: 100;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-attachment: scroll;
+  background-clip: border-box;
+  background-color: #757561;
+  background-origin: padding-box;
+  background-size: auto;
+}
+
+.rebel {
+  color: #ff6450;
+}
+
+.achieve {
+  color: #9dc9a8;
+}
+
+.bt {
+  width: 40px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.bt.bt-rebel {
+  background: #ff6450;
+  color: #fff;
+}
+
+.bt.bt-achieve {
+  background: #9dc9a8;
+  color: #444349;
+}
+
+.txt {
+  background: transparent;
+  width: 100%;
+  outline: none;
+  padding: 10px;
+  margin: 4px 0;
+  border: 1px solid #9dc9a8;
+  width: 90%;
+  font-size: 16px;
+  position: relative;
+  min-height: 100%;
+}
+
+.page-container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.page-container h2 {
+  text-align: center;
+  font-weight: 900;
+}
+
+.add-todo .txt {
+  padding: 10px;
+}
+
+.todo-list, .add-todo {
+  list-style-type: none;
+  text-align: left;
+}
+
+.todo-list li {
+  padding: 10px;
+  margin: 4px 0;
+  border: 1px solid #9dc9a8;
+  width: 90%;
+  position: relative;
+  min-height: 100%;
+  cursor: pointer;
+}
+
+.add-todo li {
+    margin-left: 127px;
+    width: 90%;
+}
+
+.todo-list li .bt {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  transition: width 0.4s ease-in-out;
+}
+
+.todo-list li .bt:hover {
+  width: 80px;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <title>Todo</title>
+  	<script src="https://code.angularjs.org/1.2.17/angular.js"></script>
+    <script src="js/script.js"></script>
+    
+    <link href='//fonts.googleapis.com/css?family=Roboto:100,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body ng-app="Todo" ng-controller="TodoCtrl" ng-init="initData()">
+    <div class="page-container">
+      
+     <h2>Todo</h2>
+     
+     <ul class="todo-list" ng-repeat="todo in todos track by $index">
+        <li>
+          <span>{{ todo }}</span>
+          <button class="bt bt-achieve" ng-click="done(todo)">Done</button>
+        </li>
+      </ul>
+      
+    </div>
+    
+    <ul class="add-todo">
+	    <li>
+	      <input type="text" class="txt" placeholder="New Todo" ng-model="newTodo" ng-keyup="add($event)" />
+	    </li>
+  	</ul>
+    
+  </body>
+
+</html>
