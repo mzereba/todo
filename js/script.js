@@ -27,7 +27,7 @@ app.controller('TodoCtrl', function($scope) {
   
    $scope.add = function(e) {
     if (e.which && e.which === 13) {
-      // Add here Http request PUT/POST for inserting data
+      // Add here Http request PUT/POST for pushing data
       $scope.todos.push($scope.newTodo);
       $scope.newTodo = '';
     }
