@@ -1,35 +1,68 @@
-<!DOCTYPE html>
+﻿<!doctype html>
 <html>
-
-  <head>
-  <title>Todo</title>
-  	<script src="https://code.angularjs.org/1.2.17/angular.js"></script>
-    <script src="js/script.js"></script>
-    
-    <link href='//fonts.googleapis.com/css?family=Roboto:100,300' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-
-  <body ng-app="Todo" ng-controller="TodoCtrl" ng-init="initData()">
-    <div class="page-container">
-      
-     <h2>Todo</h2>
-     
-     <ul class="todo-list" ng-repeat="todo in todos track by $index">
-        <li>
-          <span>{{ todo }}</span>
-          <button class="bt bt-achieve" ng-click="done(todo)">Done</button>
-        </li>
-      </ul>
-      
-    </div>
-    
-    <ul class="add-todo">
-	    <li>
-	      <input type="text" class="txt" placeholder="New Todo" ng-model="newTodo" ng-keyup="add($event)" />
-	    </li>
-  	</ul>
-    
-  </body>
-
+	<head>
+		<meta charset="utf-8">
+		<title>Todos | To do Manager</title>
+		
+		<script src="js/angular/angular.min.js"></script>
+		<script src="js/angular/angular-ui-bootstrap-modal.js"></script>
+		<script src="js/angular/angular-animate.js"></script>
+		<script src='js/rdflib/rdflib.min.js'></script>
+		
+		<script src="js/app.js"></script>
+		
+		<link rel="stylesheet" href="css/app.css" />
+		<link rel="stylesheet" href="css/bootstrap.css" />
+	</head>
+	<body ng-app="Todo" ng-controller="TodoCtrl">
+		<div id="header-bar">
+			<button class="btn btn-warning block" ng-click="login()">Login / Signup</button>
+		</div>
+		<section id="todoapp">
+			<header id="header">
+				<h1>todos</h1>
+				<input id="new-todo" name="title" placeholder="Enter a new task..." ng-model="newtodo.title" ng-keypress="($event.which === 13)?add($event, newtodo):0" autofocus>
+			</header>
+			<section id="main">
+				<input id="toggle-all" type="checkbox"> <label
+					for="toggle-all">Mark all as complete</label>
+				<ul id="todo-list">
+					<li ng-repeat="todo in todos" class="editing">
+						<div class="view">
+							<input class="toggle" type="checkbox">
+							<label ng-hide="isEditing" ng-dblclick="isEditing = !isEditing">{{todo.title}}</label>
+							<button class="destroy" ng-click="remove(todo.id)"></button>
+						</div>
+						<input class="edit" ng-show="isEditing" ng-model="todo.title" ng-blur="isEditing = !isEditing;edit(todo);">
+					</li>
+				</ul>
+			</section>
+			<footer id="footer">
+				<span id="todo-count"><strong>{{todos.length}}</strong> items left</span>
+					<!-- 
+					<ul id="filters">
+						<li>
+							<a {{#eq filter 'all'}}class="selected"{{/eq}} href="#/all">All</a>
+						</li>
+						<li>
+							<a {{#eq filter 'active'}}class="selected"{{/eq}}href="#/active">Active</a>
+						</li>
+						<li>
+							<a {{#eq filter 'completed'}}class="selected"{{/eq}}href="#/completed">Completed</a>
+						</li>
+					</ul>
+					{{#if completedTodos}}<button id="clear-completed">Clear completed ({{completedTodos}})</button>{{/if}}
+					 -->
+			</footer>
+		</section>
+		<footer id="info">
+			<p>Double-click to edit a todo</p>
+			<p>
+				Stylesheets by <a href="http://sindresorhus.com">Sindre Sorhus</a>
+			</p>
+		</footer>
+	
+		<div modal="authenticationModal" ng-include="'templates/authenticationModal.htm'" close="cancel()"></div>
+	
+	</body>
 </html>
