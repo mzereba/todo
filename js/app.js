@@ -24,9 +24,9 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     // Simply search contacts list for given id
     // and returns the contact object if found
     $scope.get = function (id) {
-        for (i in $scope.contacts) {
-            if ($scope.contacts[i].id == id) {
-                return $scope.contacts[i];
+        for (i in $scope.todos) {
+            if ($scope.todos[i].id == id) {
+                return $scope.todos[i];
             }
         }
     };
@@ -37,7 +37,6 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     	newtodo.id = new Date().getTime();
         newtodo.isCompleted = false;
         $scope.insertTodo(newtodo, CREATE);
-        $scope.newtodo = {};
     };
         
     $scope.edit = function(todo) {
@@ -153,8 +152,8 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
             if(operation == CREATE){
             	console.log('Success', 'Resource created.');
             	//update view
-            	$scope.todos.length = 0;
-            	$scope.load();
+            	$scope.newtodo = {};
+            	$scope.todos.push(todo);
           	}else
             	console.log('Success', 'Resource updated.');
           }
@@ -172,8 +171,8 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     
     // Iterate through todos list and delete
     // todo if found
-    $scope.remove = function (id) {
-        var uri = $scope.path + $scope.prefix + id;
+    $scope.remove = function (todo) {
+        var uri = $scope.path + $scope.prefix + todo.id;
     	$http({
     	      method: 'DELETE',
     	      url: uri,
@@ -183,8 +182,10 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     	      if (status == 200) {
     	    	console.log('Success', 'Resource deleted.');
     	        //update view
-                $scope.todos.length = 0;
-                $scope.load();
+    	    	var indexOf = $scope.todos.indexOf(todo);
+    	    	if (indexOf !== -1) {
+    	    		$scope.todos.splice(indexOf, 1);
+    	    	}
     	      }
     	    }).
     	    error(function(data, status) {
@@ -199,7 +200,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     	      }
     	});
     	
-        //if ($scope.newtodo.id == id) $scope.newtodo = {};
+        if ($scope.newtodo.id == todo.id) $scope.newtodo = {};
     };
     
     // Create todos container
@@ -270,7 +271,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
        var rdf =   "<" + uri + ">\n" +
           "a <http://www.w3.org/2000/01/rdf-schema#Resource>, <http://user.pds.org/ontology/task> ;\n" +
           "<http://purl.org/dc/elements/1.1/title> \"" + todo.title + "\" ;\n" +
-          "<http://user.pds.org/ontology/completed> \"" + todo.isCompleted + "\" .\n";
+          "<http://user.pds.org/ontology/completed> \"" + !todo.isCompleted + "\" .\n";
        return rdf;
     };
        
