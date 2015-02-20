@@ -21,17 +21,17 @@
 		<section id="todoapp">
 			<header id="header">
 				<h1>todos</h1>
-				<input id="new-todo" name="title" placeholder="Enter a new task..." ng-model="newtodo.title" ng-keypress="($event.which === 13)?add($event, newtodo):0" autofocus>
+				<input id="new-todo" name="title" placeholder="Enter a new task..." ng-model="newtodo.title" ng-keypress="($event.which === 13)?add($event, newtodo):0" ng-disabled="!hasAuthenticated(validUser)" autofocus>
 			</header>
 			<section id="main">
-				<input id="toggle-all" type="checkbox"> <label
-					for="toggle-all">Mark all as complete</label>
+				<input id="toggle-all" type="checkbox"> 
+				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list">
 					<li ng-repeat="todo in todos" class="editing">
 						<div class="view">
 							<input class="toggle" type="checkbox">
 							<label ng-hide="isEditing" ng-dblclick="isEditing = !isEditing">{{todo.title}}</label>
-							<button class="destroy" ng-click="remove(todo.id)"></button>
+							<button class="destroy" ng-click="remove(todo)"></button>
 						</div>
 						<input class="edit" ng-show="isEditing" ng-model="todo.title" ng-blur="isEditing = !isEditing;edit(todo);">
 					</li>
