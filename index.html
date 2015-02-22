@@ -27,7 +27,7 @@
 				<input id="toggle-all" type="checkbox" ng-model="checkAll" ng-click="completeAll()">
 				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list">
-					<li ng-repeat="todo in todos" ng-class="{'completed': todo.isCompleted=='true'}" class="editing">
+					<li ng-repeat="todo in todos | filter:view" ng-class="{'completed': todo.isCompleted=='true'}" class="editing">
 						<div class="view" >
 							<input class="toggle" type="checkbox" ng-click="complete(todo)" ng-model="todo.isCompleted" ng-checked="{{todo.isCompleted}}" ng-true-value="'true'"  ng-false-value="'false'">
 							<label ng-hide="isEditing" ng-dblclick="isEditing = !isEditing">{{todo.title}}</label>
@@ -40,19 +40,17 @@
 			<footer id="footer">
 				<span id="todo-count"><strong>{{(todos | filter:'false').length}}</strong> items left</span>
 					<ul id="filters">
-					<!-- 
 						<li>
-							<a {{#eq filter 'all'}}class="selected"{{/eq}} href="#/all">All</a>
+							<a ng-class="{'selected': setView=='all'}" ng-click="showView('all')">All</a>
 						</li>
 						<li>
-							<a {{#eq filter 'active'}}class="selected"{{/eq}}href="#/active">Active</a>
+							<a ng-class="{'selected': setView=='active'}" ng-click="showView('active')">Active</a>
 						</li>
 						<li>
-							<a {{#eq filter 'completed'}}class="selected"{{/eq}}href="#/completed">Completed</a>
+							<a ng-class="{'selected': setView=='completed'}" ng-click="showView('completed')">Completed</a>
 						</li>
 						 
 					</ul>
-					-->
 					<button id="clear-completed" ng-if="(todos | filter:'true').length > 0" ng-click="removeCompleted()">Clear completed {{(todos | filter:'true').length}}</button>
 			</footer>
 		</section>

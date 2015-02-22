@@ -9,6 +9,7 @@ var app = angular.module('Todo', ['ui.bootstrap.modal']);
 app.controller('TodoCtrl', function ($scope, $http, $sce) {
 	$scope.todos = [];
     $scope.validUser = "no";
+    $scope.setView = "all";
     
     $scope.user = '';
     $scope.storage = '';	
@@ -64,13 +65,34 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     
     $scope.removeCompleted = function() {
     	for(i in $scope.todos) {
-    		if($scope.todos[i].isCompleted == true){
+    		if($scope.todos[i].isCompleted == 'true'){
     			$scope.remove($scope.todos[i]);
     		}
     	}
     };
-       
-    $scope.login = function() {
+    
+    $scope.showView = function(status) {
+	    if(status == 'all'){
+	    	$scope.view = function(todo) {
+		        return todo.isCompleted == 'true' || todo.isCompleted == 'false';
+		    }
+		    $scope.setView = "all";
+	    }
+	    if(status == 'active'){
+	    	$scope.view = function(todo) {
+		        return todo.isCompleted == 'false';
+		    }
+		    $scope.setView = "active";
+	    }
+	    if(status == 'completed'){
+	    	$scope.view = function(todo) {
+		        return todo.isCompleted == 'true';
+		    }
+		    $scope.setView = "completed";
+	    }
+    };
+    
+   $scope.login = function() {
     	 $scope.authenticationModal = true;	 
     };
     
