@@ -577,3 +577,8 @@ hr {
 	font-size: 32px;
 	font-weight: bold;
 }
+
+.completed {
+	color: #a9a9a9;
+	text-decoration: line-through;
+}
