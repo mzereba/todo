@@ -219,7 +219,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     	      }
     	});
     	
-        if ($scope.newtodo.id == todo.id) $scope.newtodo = {};
+        //if ($scope.newtodo.id == todo.id) $scope.newtodo = {};
     };
     
     // Create todos container
