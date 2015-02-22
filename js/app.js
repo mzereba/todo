@@ -55,10 +55,18 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     	$scope.insertTodo(todo, UPDATE);
     };
     
-    $scope.toggleAll = function() {
+    $scope.completeAll = function() {
     	for(i in $scope.todos) {
     		$scope.todos[i].isCompleted = "" + $scope.checkAll;
     		$scope.complete($scope.todos[i]);
+    	}
+    };
+    
+    $scope.removeCompleted = function() {
+    	for(i in $scope.todos) {
+    		if($scope.todos[i].isCompleted == true){
+    			$scope.remove($scope.todos[i]);
+    		}
     	}
     };
        
