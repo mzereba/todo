@@ -21,8 +21,8 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     var providerURI = '//linkeddata.github.io/signup/index.html?ref=';
     $scope.widgetURI = $sce.trustAsResourceUrl(providerURI+window.location.protocol+'//'+window.location.host);
             
-    // Simply search contacts list for given id
-    // and returns the contact object if found
+    // Simply search todos list for given id
+    // and returns the todo object if found
     $scope.get = function (id) {
         for (i in $scope.todos) {
             if ($scope.todos[i].id == id) {
@@ -35,7 +35,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
         //if this is new todo, add it in todos array
 		//generate unique id
     	newtodo.id = new Date().getTime();
-        newtodo.isCompleted = false;
+        newtodo.isCompleted = "" + false;
         $scope.insertTodo(newtodo, CREATE);
     };
         
@@ -49,6 +49,17 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
 	    }
 	    
 	    $scope.editing = false;
+    };
+    
+    $scope.complete = function(todo) {
+    	$scope.insertTodo(todo, UPDATE);
+    };
+    
+    $scope.toggleAll = function() {
+    	for(i in $scope.todos) {
+    		$scope.todos[i].isCompleted = "" + $scope.checkAll;
+    		$scope.complete($scope.todos[i]);
+    	}
     };
        
     $scope.login = function() {
@@ -94,7 +105,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
 					var todo = {
 						id: sId[1],
 					    title: t,
-					    isCompleted: (completed)?true:false
+					    isCompleted: completed
 					};
 					
 					$scope.todos.push(todo);
@@ -271,7 +282,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
        var rdf =   "<" + uri + ">\n" +
           "a <http://www.w3.org/2000/01/rdf-schema#Resource>, <http://user.pds.org/ontology/task> ;\n" +
           "<http://purl.org/dc/elements/1.1/title> \"" + todo.title + "\" ;\n" +
-          "<http://user.pds.org/ontology/completed> \"" + !todo.isCompleted + "\" .\n";
+          "<http://user.pds.org/ontology/completed> \"" + todo.isCompleted + "\" .\n";
        return rdf;
     };
        
