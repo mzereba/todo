@@ -24,7 +24,7 @@
 				<input id="new-todo" name="title" placeholder="Enter a new task..." ng-model="newtodo.title" ng-keypress="($event.which === 13)?add($event, newtodo):0" ng-disabled="!hasAuthenticated(validUser)" autofocus>
 			</header>
 			<section id="main">
-				<input id="toggle-all" type="checkbox" ng-model="checkAll" ng-click="toggleAll()">
+				<input id="toggle-all" type="checkbox" ng-model="checkAll" ng-click="completeAll()">
 				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list">
 					<li ng-repeat="todo in todos" ng-class="{'completed': todo.isCompleted=='true'}" class="editing">
@@ -38,9 +38,9 @@
 				</ul>
 			</section>
 			<footer id="footer">
-				<span id="todo-count"><strong>{{todos.length}}</strong> items left</span>
-					<!-- 
+				<span id="todo-count"><strong>{{(todos | filter:'false').length}}</strong> items left</span>
 					<ul id="filters">
+					<!-- 
 						<li>
 							<a {{#eq filter 'all'}}class="selected"{{/eq}} href="#/all">All</a>
 						</li>
@@ -52,8 +52,8 @@
 						</li>
 						 
 					</ul>
-					<button id="clear-completed" ng-if="todos.length > 0 && contacts[0].id != 0">Clear completed ({{completedTodos}})</button>
 					-->
+					<button id="clear-completed" ng-if="(todos | filter:'true').length > 0" ng-click="removeCompleted()">Clear completed {{(todos | filter:'true').length}}</button>
 			</footer>
 		</section>
 		<footer id="info">
