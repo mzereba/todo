@@ -4,7 +4,7 @@
  * @author mzereba
  */
 
-var app = angular.module('Todo', ['ui.bootstrap.modal']);
+var app = angular.module('Todo', ['ui.bootstrap.modal', 'ui.bootstrap.tooltip']);
 
 app.directive('ngFocus', function($timeout) {
     return {
