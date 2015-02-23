@@ -30,10 +30,10 @@
 					<li ng-repeat="todo in todos | filter:view" ng-class="{'completed': todo.isCompleted=='true'}" class="editing">
 						<div class="view" >
 							<input class="toggle" type="checkbox" ng-click="complete(todo)" ng-model="todo.isCompleted" ng-checked="{{todo.isCompleted}}" ng-true-value="'true'"  ng-false-value="'false'">
-							<label ng-hide="isEditing" ng-dblclick="isEditing = !isEditing">{{todo.title}}</label>
+							<label ng-hide="isEditing" ng-dblclick="isEditing = !isEditing;focus();">{{todo.title}}</label>
 							<button class="destroy" ng-click="remove(todo)"></button>
 						</div>
-						<input class="edit" ng-show="isEditing" ng-model="todo.title" ng-blur="isEditing = !isEditing;edit(todo);">
+						<input class="edit" ng-show="isEditing" ng-model="todo.title" ng-focus="isFocused" ng-blur="isEditing = !isEditing;edit(todo);">
 					</li>
 				</ul>
 			</section>

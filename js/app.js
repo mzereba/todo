@@ -6,6 +6,25 @@
 
 var app = angular.module('Todo', ['ui.bootstrap.modal']);
 
+app.directive('ngFocus', function($timeout) {
+    return {
+        link: function ( scope, element, attrs ) {
+            scope.$watch( attrs.ngFocus, function ( val ) {
+                if ( angular.isDefined( val ) && val ) {
+                    $timeout( function () { element[0].focus(); } );
+                }
+            }, true);
+
+            element.bind('blur', function () {
+                if ( angular.isDefined( attrs.ngFocusLost ) ) {
+                    scope.$apply( attrs.ngFocusLost );
+
+                }
+            });
+        }
+    };
+});
+
 app.controller('TodoCtrl', function ($scope, $http, $sce) {
 	$scope.todos = [];
     $scope.validUser = "no";
@@ -22,6 +41,10 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     var providerURI = '//linkeddata.github.io/signup/index.html?ref=';
     $scope.widgetURI = $sce.trustAsResourceUrl(providerURI+window.location.protocol+'//'+window.location.host);
             
+    $scope.focus = function(){
+    	$scope.isFocused = true;
+    };
+    
     // Simply search todos list for given id
     // and returns the todo object if found
     $scope.get = function (id) {
