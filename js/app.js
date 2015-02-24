@@ -66,6 +66,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     $scope.edit = function(todo) {
 	    //for existing todo, find this todo using id
 	    //and update it.
+    	$scope.isFocused = false;
 	    for (i in $scope.todos) {
 	        if ($scope.todos[i].id == todo.id) {
 	        	$scope.insertTodo(todo, UPDATE);
