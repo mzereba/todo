@@ -63,7 +63,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
         $scope.insertTodo(newtodo, CREATE);
     };
         
-    $scope.edit = function(todo) {
+    $scope.edit = function(todo, isEditing) {
 	    //for existing todo, find this todo using id
 	    //and update it.
     	$scope.isFocused = false;
@@ -73,7 +73,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
 	        }
 	    }
 	    
-	    $scope.editing = false;
+	    $scope.isFocused = false;
     };
     
     $scope.complete = function(todo) {
@@ -131,9 +131,9 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     $scope.authenticate = function(webid) {
         if (webid.slice(0,4) == 'http') {
         	$scope.validUser = "yes";
-            console.log('Success', 'Authenticated user.');
+            notify('Success', 'Authenticated user.');
         } else {
-            console.log('Failed', 'Authentication failed.');
+            notify('Failed', 'Authentication failed.');
         }
     };
         
@@ -215,21 +215,21 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
         success(function(data, status, headers) {
           if (status == 200 || status == 201) {
             if(operation == CREATE){
-            	console.log('Success', 'Resource created.');
+            	notify('Success', 'Resource created.');
             	//update view
             	$scope.newtodo = {};
             	$scope.todos.push(todo);
           	}else
-            	console.log('Success', 'Resource updated.');
+            	notify('Success', 'Resource updated.');
           }
         }).
         error(function(data, status) {
           if (status == 401) {
-        	  console.log('Forbidden', 'Authentication required to create new resource.');
+        	  notify('Forbidden', 'Authentication required to create new resource.');
           } else if (status == 403) {
-        	  console.log('Forbidden', 'You are not allowed to create new resource.');
+        	  notify('Forbidden', 'You are not allowed to create new resource.');
           } else {
-        	  console.log('Failed '+ status + data);
+        	  notify('Failed '+ status + data);
           }
         });
     };
@@ -245,7 +245,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     	    }).
     	    success(function(data, status, headers) {
     	      if (status == 200) {
-    	    	console.log('Success', 'Resource deleted.');
+    	    	notify('Success', 'Resource deleted.');
     	        //update view
     	    	var indexOf = $scope.todos.indexOf(todo);
     	    	if (indexOf !== -1) {
@@ -255,13 +255,13 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     	    }).
     	    error(function(data, status) {
     	      if (status == 401) {
-    	    	  console.log('Forbidden', 'Authentication required to delete '+uri);
+    	    	  notify('Forbidden', 'Authentication required to delete '+uri);
     	      } else if (status == 403) {
     	    	  notify('Forbidden', 'You are not allowed to delete '+uri);
     	      } else if (status == 409) {
-    	    	  console.log('Failed', 'Conflict detected. In case of directory, check if not empty.');
+    	    	  notify('Failed', 'Conflict detected. In case of directory, check if not empty.');
     	      } else {
-    	    	  console.log('Failed '+status, data);
+    	    	  notify('Failed '+status, data);
     	      }
     	});
     	
@@ -283,7 +283,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
         }).
         success(function(data, status, headers) {
           if (status == 200 || status == 201) {
-            console.log('Success', 'Your todos container has been created at '+str);
+            notify('Success', 'Your todos container has been created at '+str);
             $scope.path = str;
             //fetch user data
             $scope.load();
@@ -291,11 +291,11 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
         }).
         error(function(data, status) {
           if (status == 401) {
-        	  console.log('Forbidden', 'Authentication required to create new directory.');
+        	  notify('Forbidden', 'Authentication required to create new directory.');
           } else if (status == 403) {
-        	  console.log('Forbiddenn', 'You are not allowed to create new directory.');
+        	  notify('Forbiddenn', 'You are not allowed to create new directory.');
           } else {
-        	  console.log('Failed: '+ status + data);
+        	  notify('Failed: '+ status + data);
           }
         });
     };
@@ -310,7 +310,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
         }).
         success(function(data, status, headers) {
           //add dir to storage
-          //console.log("Todos container found");
+          //notify("Todos container found");
           $scope.path = uri;
           //fetch user data
           $scope.load();
@@ -318,15 +318,15 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
         }).
         error(function(data, status) {
           if (status == 401) {
-            console.log('Forbidden', 'Authentication required to create a directory for: '+$scope.user);
+            notify('Forbidden', 'Authentication required to create a directory for: '+$scope.user);
           } else if (status == 403) {
-        	  console.log('Forbidden', 'You are not allowed to access storage for: '+$scope.user);
+        	  notify('Forbidden', 'You are not allowed to access storage for: '+$scope.user);
           } else if (status == 404) {
-        	  //console.log('Contacts container not found...', 'creating it');
+        	  //notify('Contacts container not found...', 'creating it');
         	  //create todos container
         	  $scope.createTodosContainer(uri);
           } else {
-        	  console.log('Failed - HTTP '+status, data, 5000);
+        	  notify('Failed - HTTP '+status, data, 5000);
           }
         });
     };

@@ -11,6 +11,7 @@
 		<script src='js/rdflib/rdflib.min.js'></script>
 		
 		<script src="js/app.js"></script>
+		<script src="js/utils/notifications.js"></script>
 		
 		<link rel="stylesheet" href="css/app.css" />
 		<link rel="stylesheet" href="css/bootstrap.css" />
@@ -22,11 +23,10 @@
 		<section id="todoapp">
 			<header id="header">
 				<h1>todos</h1>
-				<input id="new-todo" name="title" placeholder="What needs to be done?" ng-model="newtodo.title" ng-keypress="($event.which === 13)?add($event, newtodo):0" ng-focus="isFocused" ng-disabled="!hasAuthenticated(validUser)" autofocus>
+				<input id="new-todo" name="title" placeholder="What needs to be done?" ng-model="newtodo.title" ng-keypress="($event.which === 13)?add($event, newtodo):0" ng-disabled="!hasAuthenticated(validUser)" autofocus>
 			</header>
 			<section id="main">
 				<input id="toggle-all" type="checkbox" ng-model="checkAll" ng-click="completeAll()" ng-disabled="!hasAuthenticated(validUser)" tooltip="Mark all as complete" tooltip-placement="left">
-				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list">
 					<li ng-repeat="todo in todos | filter:view" ng-class="{'completed': todo.isCompleted=='true'}" class="editing">
 						<div class="view" >
