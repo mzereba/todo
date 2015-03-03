@@ -18,7 +18,8 @@
 	</head>
 	<body ng-app="Todo" ng-controller="TodoCtrl">
 		<div id="header-bar">
-			<button class="btn btn-warning block" ng-click="login()">Login / Signup</button>
+			<button class="btn btn-warning block" ng-show="!hasAuthenticated(validUser)" ng-click="openAuthenticationModal()">Login / Signup</button>
+			<button class="btn btn-warning block" ng-hide="!hasAuthenticated(validUser)" ng-click="logout()">Logout</button>
 		</div>
 		<section id="todoapp">
 			<header id="header">
