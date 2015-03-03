@@ -30,7 +30,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     $scope.validUser = "no";
     $scope.setView = "all";
     
-    $scope.user = '';
+    $scope.userProfile = '';
     $scope.storage = '';	
     $scope.path = 	
     $scope.prefix = "task_";
@@ -40,7 +40,50 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     
     var providerURI = '//linkeddata.github.io/signup/index.html?ref=';
     $scope.widgetURI = $sce.trustAsResourceUrl(providerURI+window.location.protocol+'//'+window.location.host);
-            
+    
+    // Define the appuri, used as key when saving to sessionStorage
+    $scope.appuri = window.location.hostname+window.location.pathname;
+    
+    // Save profile object in sessionStorage after login
+    $scope.saveCredentials = function () {
+        var app = {};
+        var _user = {};
+        app.userProfile = $scope.userProfile;
+        sessionStorage.setItem($scope.appuri, JSON.stringify(app));
+    };
+
+    // Clear sessionStorage on logout
+    $scope.clearLocalCredentials = function () {
+        sessionStorage.removeItem($scope.appuri);
+    };
+     
+    $scope.openAuthenticationModal = function() {
+    	$scope.authenticationModal = true;	 
+    };
+    
+    $scope.closeAuthenticationModal = function() {
+    	$scope.authenticationModal = false;
+    };
+   
+    $scope.logout = function() {
+    	$scope.clearLocalCredentials();
+    	$scope.validUser = "no";
+    	$scope.todos = [];
+    };
+
+    $scope.hasAuthenticated = function(value) {
+    	return "yes"==value;
+    };
+    
+    $scope.authenticate = function(webid) {
+        if (webid.slice(0,4) == 'http') {
+        	$scope.validUser = "yes";
+            notify('Success', 'Authenticated user.');
+        } else {
+            notify('Failed', 'Authentication failed.');
+        }
+    };
+    
     $scope.focus = function(){
     	$scope.isFocused = true;
     };
@@ -115,27 +158,6 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
 		    $scope.setView = "completed";
 	    }
     };
-    
-   $scope.login = function() {
-    	 $scope.authenticationModal = true;	 
-    };
-    
-    $scope.hasAuthenticated = function(value) {
-        return "yes"==value;
-    };
-    
-    $scope.closeAuthentication = function() {
-    	$scope.authenticationModal = false;
-    };
-    
-    $scope.authenticate = function(webid) {
-        if (webid.slice(0,4) == 'http') {
-        	$scope.validUser = "yes";
-            notify('Success', 'Authenticated user.');
-        } else {
-            notify('Failed', 'Authentication failed.');
-        }
-    };
         
     // Listing todo resources
     $scope.load = function () {
@@ -173,7 +195,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     $scope.getStorage = function () {
 		var g = $rdf.graph();
 	    var f = $rdf.fetcher(g);
-	    var uri = $scope.user.slice(0,$scope.user.length-3);
+	    var uri = $scope.userProfile.slice(0,$scope.userProfile.length-3);
 	    
 	    f.nowOrWhenFetched(uri ,undefined,function(){	
 		    var DC = $rdf.Namespace('http://purl.org/dc/elements/1.1/');
@@ -347,11 +369,28 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     eventListener(messageEvent,function(e) {
         if (e.data.slice(0,5) == 'User:') {          
             $scope.authenticate(e.data.slice(5, e.data.length));
-            $scope.user = e.data.slice(5);
+            $scope.userProfile = e.data.slice(5);
+            $scope.saveCredentials();
             //get user storage and assign todos dir
             $scope.getStorage();
         }
         
-        $scope.closeAuthentication();
+        $scope.closeAuthenticationModal();
     },false);
+    
+    // Retrieve from sessionStorage
+    if (sessionStorage.getItem($scope.appuri)) {
+        var app = JSON.parse(sessionStorage.getItem($scope.appuri));
+        if (app.userProfile) {
+          if (!$scope.userProfile) {
+            $scope.userProfile = {};
+          }
+          $scope.userProfile = app.userProfile;
+          $scope.loggedin = true;
+        } else {
+          // clear sessionStorage in case there was a change to the data structure
+          sessionStorage.removeItem($scope.appuri);
+        }
+    }
+
 });
