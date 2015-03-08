@@ -30,7 +30,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     $scope.validUser = "no";
     $scope.setView = "all";
     
-    $scope.userProfile = '';
+    $scope.userProfile = {};
     $scope.storage = '';	
     $scope.path = 	
     $scope.prefix = "task_";
