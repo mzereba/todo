@@ -12,7 +12,7 @@ function notify(type, body, timeout) {
   if (!timeout) {
     var timeout = 2000;
   }
-
+ 
   // Let's check if the browser supports notifications
   if (!("Notification" in window)) {
     console.log("This browser does not support desktop notification");

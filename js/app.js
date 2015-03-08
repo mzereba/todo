@@ -30,7 +30,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     $scope.validUser = "no";
     $scope.setView = "all";
     
-    $scope.userProfile = '';
+    $scope.userProfile = {};
     $scope.storage = '';	
     $scope.path = 	
     $scope.prefix = "task_";
@@ -195,7 +195,8 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     $scope.getStorage = function () {
 		var g = $rdf.graph();
 	    var f = $rdf.fetcher(g);
-	    var uri = $scope.userProfile.slice(0,$scope.userProfile.length-3);
+	    //var uri = $scope.userProfile.slice(0,$scope.userProfile.length-3);
+	    var uri = ($scope.userProfile.indexOf('#') >= 0)?$scope.userProfile.slice(0, $scope.userProfile.indexOf('#')):$scope.userProfile;
 	    
 	    f.nowOrWhenFetched(uri ,undefined,function(){	
 		    var DC = $rdf.Namespace('http://purl.org/dc/elements/1.1/');
@@ -216,8 +217,6 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
 			
 			$scope.isTodoContainer();
 	    });
-	    
-	    
     };
     
     // Insert or update a todo resource
@@ -382,9 +381,9 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     if (sessionStorage.getItem($scope.appuri)) {
         var app = JSON.parse(sessionStorage.getItem($scope.appuri));
         if (app.userProfile) {
-          if (!$scope.userProfile) {
-            $scope.userProfile = {};
-          }
+          //if (!$scope.userProfile) {
+          //  $scope.userProfile = {};
+          //}
           $scope.userProfile = app.userProfile;
           $scope.loggedin = true;
         } else {
