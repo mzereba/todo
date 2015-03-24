@@ -27,12 +27,11 @@ app.directive('ngFocus', function($timeout) {
 
 app.controller('TodoCtrl', function ($scope, $http, $sce) {
 	$scope.todos = [];
-    $scope.validUser = "no";
+    $scope.loggedin = false;
     $scope.setView = "all";
     
-    $scope.userProfile = {};
-    $scope.storage = '';	
-    $scope.path = 	
+    $scope.userProfile = {};	
+    $scope.path = '';	
     $scope.prefix = "task_";
     
     var CREATE = 0;
@@ -42,7 +41,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     $scope.widgetURI = $sce.trustAsResourceUrl(providerURI+window.location.protocol+'//'+window.location.host);
     
     // Define the appuri, used as key when saving to sessionStorage
-    $scope.appuri = window.location.hostname+window.location.pathname;
+    $scope.appuri = window.location.origin;
     
     // Save profile object in sessionStorage after login
     $scope.saveCredentials = function () {
@@ -67,14 +66,11 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
    
     $scope.logout = function() {
     	$scope.clearLocalCredentials();
-    	$scope.validUser = "no";
+    	$scope.loggedin = false;
     	$scope.todos = [];
+    	$scope.userProfile = {};
     };
 
-    $scope.hasAuthenticated = function(value) {
-    	return "yes"==value;
-    };
-    
     $scope.authenticate = function(webid) {
         if (webid.slice(0,4) == 'http') {
         	$scope.validUser = "yes";
@@ -196,7 +192,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
 		var g = $rdf.graph();
 	    var f = $rdf.fetcher(g);
 	    //var uri = $scope.userProfile.slice(0,$scope.userProfile.length-3);
-	    var uri = ($scope.userProfile.indexOf('#') >= 0)?$scope.userProfile.slice(0, $scope.userProfile.indexOf('#')):$scope.userProfile;
+	    var uri = ($scope.userProfile.webid.indexOf('#') >= 0)?$scope.userProfile.webid.slice(0, $scope.userProfile.webid.indexOf('#')):$scope.userProfile.webid;
 	    
 	    f.nowOrWhenFetched(uri ,undefined,function(){	
 		    var DC = $rdf.Namespace('http://purl.org/dc/elements/1.1/');
@@ -210,7 +206,8 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
 				for (var e in evs) {
 					var s = g.anyStatementMatching(evs[e]['subject'], SPACE('storage'))['object']['value'];
 					
-					$scope.storage = s;
+					$scope.userProfile.storage = s;
+					$scope.saveCredentials();
                     $scope.$apply();
                 }
 			}
@@ -323,7 +320,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     
     // Check if todos dir exists, if not create it
     $scope.isTodoContainer = function () {
-    	var uri = $scope.storage + "todos/";
+    	var uri = $scope.userProfile.storage + "todos/";
         $http({
           method: 'HEAD',
           url: uri,
@@ -368,8 +365,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
     eventListener(messageEvent,function(e) {
         if (e.data.slice(0,5) == 'User:') {          
             $scope.authenticate(e.data.slice(5, e.data.length));
-            $scope.userProfile = e.data.slice(5);
-            $scope.saveCredentials();
+            $scope.userProfile.webid = e.data.slice(5);
             //get user storage and assign todos dir
             $scope.getStorage();
         }
@@ -385,6 +381,8 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
           //  $scope.userProfile = {};
           //}
           $scope.userProfile = app.userProfile;
+          $scope.path = $scope.userProfile.storage + "todos/";
+          $scope.load();
           $scope.loggedin = true;
         } else {
           // clear sessionStorage in case there was a change to the data structure
