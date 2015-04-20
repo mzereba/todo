@@ -73,7 +73,7 @@ app.controller('TodoCtrl', function ($scope, $http, $sce) {
 
     $scope.authenticate = function(webid) {
         if (webid.slice(0,4) == 'http') {
-        	$scope.validUser = "yes";
+        	$scope.loggedin = true;
             notify('Success', 'Authenticated user.');
         } else {
             notify('Failed', 'Authentication failed.');
